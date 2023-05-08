@@ -5,41 +5,52 @@
 
 ## Table of Contents
 
-1. [Introduction](#introduction)
-2. [Variables](#variables)
-3. [Functions](#functions)
-5. [Classes](#classes)
-    1. [S: Single Responsibility Principle (SRP)](#single-responsibility-principle-srp)
-    2. [O: Open/Closed Principle (OCP)](#openclosed-principle-ocp)
-    3. [L: Liskov Substitution Principle (LSP)](#liskov-substitution-principle-lsp)
-    4. [I: Interface Segregation Principle (ISP)](#interface-segregation-principle-isp)
-    5. [D: Dependency Inversion Principle (DIP)](#dependency-inversion-principle-dip)
-6. [Don't repeat yourself (DRY)](#dont-repeat-yourself-dry)
-7. [Translations](#translations)
+- [clean-code-python](#clean-code-python)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [**Variables**](#variables)
+    - [의미 있고 발음하기 쉬운 변수명을 사용하기](#의미-있고-발음하기-쉬운-변수명을-사용하기)
+    - [같은 타입의 변수에는 같은 단어 사용하기](#같은-타입의-변수에는-같은-단어-사용하기)
+    - [검색하기 쉬운 이름 사용하기](#검색하기-쉬운-이름-사용하기)
+    - [설명 가능한 변수 사용하기](#설명-가능한-변수-사용하기)
+    - [암시적인 의미 피하기](#암시적인-의미-피하기)
+    - [불필요한 맥락 제거하기](#불필요한-맥락-제거하기)
+    - [Use default arguments instead of short circuiting or conditionals](#use-default-arguments-instead-of-short-circuiting-or-conditionals)
+  - [**Functions**](#functions)
+    - [Functions should do one thing](#functions-should-do-one-thing)
+    - [Function arguments (2 or fewer ideally)](#function-arguments-2-or-fewer-ideally)
+    - [Function names should say what they do](#function-names-should-say-what-they-do)
+    - [Functions should only be one level of abstraction](#functions-should-only-be-one-level-of-abstraction)
+    - [Don't use flags as function parameters](#dont-use-flags-as-function-parameters)
+    - [Avoid side effects](#avoid-side-effects)
+  - [**Classes**](#classes)
+    - [**Single Responsibility Principle (SRP)**](#single-responsibility-principle-srp)
+    - [**Open/Closed Principle (OCP)**](#openclosed-principle-ocp)
+    - [**Liskov Substitution Principle (LSP)**](#liskov-substitution-principle-lsp)
+    - [**Interface Segregation Principle (ISP)**](#interface-segregation-principle-isp)
+    - [**Dependency Inversion Principle (DIP)**](#dependency-inversion-principle-dip)
+  - [**Don't repeat yourself (DRY)**](#dont-repeat-yourself-dry)
+  - [**Translations**](#translations)
 
 ## Introduction
 
-Software engineering principles, from Robert C. Martin's book
-[*Clean
-Code*](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882)
-, adapted for Python. This is not a style guide. It's a guide to producing
-readable, reusable, and refactorable software in Python.
+Robert C. Martin의 저서
+[*Clean Code*](https://product.kyobobook.co.kr/detail/S000001032980)의 소프트웨어 엔지니어링 원칙들을 Python으로 소개합니다. 본 문서는 스타일 가이드가 아닙니다. Python에서 읽기 쉽고 재사용 가능하며 리팩토링 가능한 소프트웨어를 제작하기 위한 가이드입니다.
 
 Not every principle herein has to be strictly followed, and even fewer will be
 universally agreed upon. These are guidelines and nothing more, but they are
 ones codified over many years of collective experience by the authors of *Clean
 Code*.
 
-Adapted
-from [clean-code-javascript](https://github.com/ryanmcdermott/clean-code-javascript)
+[clean-code-javascript](https://github.com/ryanmcdermott/clean-code-javascript)를 바탕으로 작성되었습니다.
 
-Targets Python3.7+
+Python 3.7 이상 버전을 사용합니다.
 
 ## **Variables**
 
-### Use meaningful and pronounceable variable names
+### 의미 있고 발음하기 쉬운 변수명을 사용하기
 
-**Bad:**
+**나쁜 예:**
 
 ```python
 import datetime
@@ -47,10 +58,9 @@ import datetime
 ymdstr = datetime.date.today().strftime("%y-%m-%d")
 ```
 
-Additionally, there's no need to add the type of the variable (str) to its
-name.
+추가로, 변수명에 str이라는 타입을 명시해 줄 필요가 없습니다. 
 
-**Good**:
+**좋은 예:**
 
 ```python
 import datetime
@@ -60,10 +70,10 @@ current_date: str = datetime.date.today().strftime("%y-%m-%d")
 
 **[⬆ back to top](#table-of-contents)**
 
-### Use the same vocabulary for the same type of variable
+### 같은 타입의 변수에는 같은 단어 사용하기
 
-**Bad:**
-Here we use three different names for the same underlying entity:
+**나쁜 예:**
+동일한 엔티티에 대해 세 가지 다른 이름을 사용하고 있습니다:
 
 ```python
 def get_user_info(): pass
@@ -75,9 +85,7 @@ def get_client_data(): pass
 def get_customer_record(): pass
 ```
 
-**Good**:
-If the entity is the same, you should be consistent in referring to it in your
-functions:
+**좋은 예**: 동일한 엔티티라면, 함수에서 엔티티를 일관되게 참조해야 합니다:
 
 ```python
 def get_user_info(): pass
@@ -89,10 +97,8 @@ def get_user_data(): pass
 def get_user_record(): pass
 ```
 
-**Even better**
-Python is (also) an object oriented programming language. If it makes sense,
-package the functions together with the concrete implementation of the entity
-in your code, as instance attributes, property methods, or methods:
+**더 좋은 방법으로**
+Python은 객체 지향 언어입니다. 따라서 가능하다면 의미가 있는 인스턴스 attributes, 프로퍼티 메서드 또는 메서드와 같이 코드에서 엔티티의 구체적인 구현과 함께 함수를 패키징합니다.
 
 ```python
 from typing import Union, Dict
@@ -115,14 +121,11 @@ class User:
 
 **[⬆ back to top](#table-of-contents)**
 
-### Use searchable names
+### 검색하기 쉬운 이름 사용하기
 
-We will read more code than we will ever write. It's important that the code we
-do write is readable and searchable. By *not* naming variables that end up
-being meaningful for understanding our program, we hurt our readers. Make your
-names searchable.
+우리는 통상 쓰는 것보다 더 많은 양의 코드를 읽습니다. 따라서 코드가 읽기 쉽고 검색하기 쉬운 것이 중요합니다. 프로그램을 이해하는데 의미가 있도록 변수를 짓지 않는다면 읽는 사람이 힘들 것 입니다. 이름을 검색하기 쉽도록 작성합니다.
 
-**Bad:**
+**나쁜 예:**
 
 ```python
 import time
@@ -131,7 +134,7 @@ import time
 time.sleep(86400)
 ```
 
-**Good**:
+**좋은 예**:
 
 ```python
 import time
@@ -143,9 +146,9 @@ time.sleep(SECONDS_IN_A_DAY)
 
 **[⬆ back to top](#table-of-contents)**
 
-### Use explanatory variables
+### 설명 가능한 변수 사용하기
 
-**Bad:**
+**나쁜 예**
 
 ```python
 import re
@@ -158,9 +161,9 @@ if matches:
     print(f"{matches[1]}: {matches[2]}")
 ```
 
-**Not bad**:
+**개선된 예**:
 
-It's better, but we are still heavily dependent on regex.
+더 낫긴 하지만 여전히 정규식에 크게 의존하고 있습니다.
 
 ```python
 import re
@@ -174,9 +177,11 @@ if matches:
     print(f"{city}: {zip_code}")
 ```
 
-**Good**:
+**좋은 예**:
 
-Decrease dependence on regex by naming subpatterns.
+서브패턴을 활용한 네이밍으로 정규식의 의존성을 줄일 수 있습니다.
+
+
 
 ```python
 import re
@@ -191,12 +196,12 @@ if matches:
 
 **[⬆ back to top](#table-of-contents)**
 
-### Avoid Mental Mapping
+### 암시적인 의미 피하기
 
-Don’t force the reader of your code to translate what the variable means.
-Explicit is better than implicit.
+코드를 읽는 사람이 변수의 의미를 해석해야 하도록 두지 마십시오.  
+명시적인 것이 암시적인 것보다 낫습니다.
 
-**Bad:**
+**나쁜 예:**
 
 ```python
 seq = ("Austin", "New York", "San Francisco")
@@ -209,7 +214,7 @@ for item in seq:
     print(item)
 ```
 
-**Good**:
+**좋은 예**:
 
 ```python
 locations = ("Austin", "New York", "San Francisco")
@@ -223,12 +228,11 @@ for location in locations:
 
 **[⬆ back to top](#table-of-contents)**
 
-### Don't add unneeded context
+### 불필요한 맥락 제거하기
 
-If your class/object name tells you something, don't repeat that in your
-variable name.
+클래스/객체 이름에서 알 수 있는 내용이 있으면, 해당 변수명에서 반복하지 마십시오. 
 
-**Bad:**
+**나쁜 예:**
 
 ```python
 class Car:
@@ -237,7 +241,7 @@ class Car:
     car_color: str
 ```
 
-**Good**:
+**좋은 예**:
 
 ```python
 class Car:
@@ -267,7 +271,7 @@ def create_micro_brewery(name):
 ... when you can specify a default argument instead? This also makes it clear
 that you are expecting a string as the argument.
 
-**Good**:
+**좋은 예**:
 
 ```python
 import hashlib
