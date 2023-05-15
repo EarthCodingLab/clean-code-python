@@ -17,12 +17,12 @@
     - [불필요한 맥락 제거하기](#불필요한-맥락-제거하기)
     - [Use default arguments instead of short circuiting or conditionals](#use-default-arguments-instead-of-short-circuiting-or-conditionals)
   - [**Functions**](#functions)
-    - [Functions should do one thing](#functions-should-do-one-thing)
-    - [Function arguments (2 or fewer ideally)](#function-arguments-2-or-fewer-ideally)
-    - [Function names should say what they do](#function-names-should-say-what-they-do)
-    - [Functions should only be one level of abstraction](#functions-should-only-be-one-level-of-abstraction)
-    - [Don't use flags as function parameters](#dont-use-flags-as-function-parameters)
-    - [Avoid side effects](#avoid-side-effects)
+    - [함수는 한 가지 일만 하기](#함수는-한-가지-일만-하기)
+    - [함수 인자 (이상적으로는 2개 이하)](#함수-인자-이상적으로는-2개-이하)
+    - [함수 이름은 함수가 무슨 일을 하는지 알기 쉽게](#함수-이름은-함수가-무슨-일을-하는지-알기-쉽게)
+    - [함수는 하나의 추상화 수준만 가지기](#함수는-하나의-추상화-수준만-가지기)
+    - [함수 파라미터로 플래그 사용하지 않기](#함수-파라미터로-플래그-사용하지-않기)
+    - [사이드 이펙트 피하기](#사이드-이펙트-피하기)
   - [**Classes**](#classes)
     - [**Single Responsibility Principle (SRP)**](#single-responsibility-principle-srp)
     - [**Open/Closed Principle (OCP)**](#openclosed-principle-ocp)
@@ -286,15 +286,11 @@ def create_micro_brewery(name: str = "Hipster Brew Co."):
 
 ## **Functions**
 
-### Functions should do one thing
+### 함수는 한 가지 일만 하기
 
-This is by far the most important rule in software engineering. When functions
-do more than one thing, they are harder to compose, test, and reason about.
-When you can isolate a function to just one action, they can be refactored
-easily and your code will read much cleaner. If you take nothing else away from
-this guide other than this, you'll be ahead of many developers.
+소프트웨어 엔지니어링에서 가장 중요한 규칙입니다. 함수가 한가지 이상의 일을 수행한다면 함수를 구성, 테스트, 추론하기 어려워집니다. 함수를 한 가지 일만 수행하도록 분리한다면 쉽게 리팩토링 할 수 있으며, 코드는 더욱 깔끔해집니다. 이 가이드에서 이 한 가지만 기억하더라도 다른 많은 개발자보다 앞서게 될 것입니다. 
 
-**Bad:**
+**나쁜 예:**
 
 ```python
 from typing import List
@@ -316,7 +312,7 @@ def email_clients(clients: List[Client]) -> None:
             email(client)
 ```
 
-**Good**:
+**좋은 예**:
 
 ```python
 from typing import List
@@ -343,9 +339,9 @@ def email_clients(clients: List[Client]) -> None:
         email(client)
 ```
 
-Do you see an opportunity for using generators now?
+generator를 사용하여 더욱 개선할 수 있습니다.
 
-**Even better**
+**더 좋은 예**
 
 ```python
 from typing import Generator, Iterator
@@ -373,24 +369,13 @@ def email_client(clients: Iterator[Client]) -> None:
 
 **[⬆ back to top](#table-of-contents)**
 
-### Function arguments (2 or fewer ideally)
+### 함수 인자 (이상적으로는 2개 이하)
 
-A large amount of parameters is usually the sign that a function is
-doing too much (has more than one responsibility). Try to decompose it 
-into smaller functions having a reduced set of parameters, ideally less than
-three.
+함수에 많은 파라미터가 있는 경우 함수가 너무 많은 작업 (하나 이상의 책임) 을 수행하고 있다는 신호일 수 있습니다. 이상적으로 2개 이하의 파라미터를 가지도록 함수를 분해해보세요.
 
-If the function has a single responsibility, consider if you can bundle
-some or all parameters into a specialized object that will be passed as an 
-argument to the function. These parameters might be attributes of a single
-entity that you can represent with a dedicated data structure. You may also
-be able to reuse this entity elsewhere in your program. The reason why this is
-a better arrangement is than having multiple parameters is that we may be able
-to move some computations, done with those parameters inside the 
-function, into methods belonging to the new object, therefore reducing the
-complexity of the function.
+만약 함수가 하나의 책임만을 가진다면, 일부 또는 모든 파라미터를 함수에 전달할 특수화된 객체로 묶어보는 것을 고려해보세요. 이러한 파라미터는 전용 데이터 구조로 표현될 수 있는 단일 엔티티의 애트리뷰트일 수 있습니다. 또한 이러한 엔티티는 다른 곳에서도 재사용할 수 있습니다. 여러 파라미터를 사용하는 것보다 이 방법이 나은 이유는 함수 내부에서 해당 파라미터로 수행되는 일부 계산을 새 엔티티에 속하는 메서드로 옮겨 함수의 복잡도를 줄일 수 있기 떄문입니다.
 
-**Bad:**
+**나쁜 예:**
 
 ```python
 def create_menu(title, body, button_text, cancellable):
@@ -561,9 +546,9 @@ create_menu(
 
 **[⬆ back to top](#table-of-contents)**
 
-### Function names should say what they do
+### 함수 이름은 함수가 무슨 일을 하는지 알기 쉽게
 
-**Bad:**
+**나쁜 예:**
 
 ```python
 class Email:
@@ -590,12 +575,11 @@ message.send()
 
 **[⬆ back to top](#table-of-contents)**
 
-### Functions should only be one level of abstraction
+### 함수는 하나의 추상화 수준만 가지기
 
-When you have more than one level of abstraction, your function is usually
-doing too much. Splitting up functions leads to reusability and easier testing.
+만약 하나 이상의 추상화 수준을 가진다면, 함수는 너무 많은 일을 할 수도 있습니다. 함수를 재사용 가능하고 테스트하기 쉽게 분리하세요. 
 
-**Bad:**
+**나쁜 예:**
 
 ```python
 # type: ignore
@@ -619,7 +603,7 @@ def parse_better_js_alternative(code: str) -> None:
         pass
 ```
 
-**Good:**
+**좋은 예:**
 
 ```python
 from typing import Tuple, List, Dict
@@ -657,11 +641,9 @@ def parse(tokens: List) -> List:
 
 **[⬆ back to top](#table-of-contents)**
 
-### Don't use flags as function parameters
+### 함수 파라미터로 플래그 사용하지 않기
 
-Flags tell your user that this function does more than one thing. Functions
-should do one thing. Split your functions if they are following different code
-paths based on a boolean.
+플래그는 사용자에게 함수가 한 가지 이상의 일을 한다는 것을 알려줍니다. 함수는 한가지 일만을 수행해야 합니다. 따라서 불리언 값에 따라 다른 코드 경로를 따르도록 함수를 분리하세요. 
 
 **Bad:**
 
@@ -694,27 +676,15 @@ def create_temp_file(name: str) -> None:
 
 **[⬆ back to top](#table-of-contents)**
 
-### Avoid side effects
+### 사이드 이펙트 피하기
 
-A function produces a side effect if it does anything other than take a value
-in and return another value or values. For example, a side effect could be
-writing to a file, modifying some global variable, or accidentally wiring all
-your money to a stranger.
+함수가 입력값을 받아서 다른 값들을 반환하는 것 이외에 다른 작업을 수행하면 사이드 이펙트를 일으킵니다. 예를 들어, 파일 쓰기, 전역 변수 수정, 실수로 모르는 사람에게 돈을 송금하는 것 등이 있습니다.
 
-Now, you do need to have side effects in a program on occasion - for example,
-like in the previous example, you might need to write to a file. In these
-cases, you should centralize and indicate where you are incorporating side
-effects. Don't have several functions and classes that write to a particular
-file - rather, have one
-(and only one) service that does it.
+프로그램에서 때때로 사이드 이펙트가 필요할 수 있습니다. 예를 들어, 이전 예와 같이 파일에 쓰기 작업이 필요할 수 있습니다. 이러한 경우에는 사이트 이펙트를 포함하는 위치를 중앙 집중화하고 표시해야 합니다. 특정 파일에 쓰기 작업을 하는 여러 함수와 클래스를 가지지 말고 하나의 서비스만을 가지세요. 
 
-The main point is to avoid common pitfalls like sharing state between objects
-without any structure, using mutable data types that can be written to by
-anything, or using an instance of a class, and not centralizing where your side
-effects occur. If you can do this, you will be happier than the vast majority
-of other programmers.
+요점은 구조 없이 객체 간에 상태를 공유하거나, 누구나 쓸 수 있는 가변 데이터 유형을 사용하거나, 클래스의 인스턴스를 사용하거나, 부작용이 발생하는 위치를 중앙 집중화하지 않는 것과 같은 일반적인 함정을 피하는 것입니다. 이를 통해 대다수의 다른 프로그래머보다 행복하게 작업할 수 있을 것입니다.
 
-**Bad:**
+**나쁜 예:**
 
 ```python
 # type: ignore
@@ -743,7 +713,7 @@ print(fullname)  # ["Ryan", "McDermott"]
 # function again?
 ```
 
-**Good:**
+**좋은 예:**
 
 ```python
 from typing import List, AnyStr
