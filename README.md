@@ -1426,30 +1426,19 @@ by this author.
 
 ## **Don't repeat yourself (DRY)**
 
-Try to observe the [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)
-principle.
 
-Do your absolute best to avoid duplicate code. Duplicate code is bad because it
-means that there's more than one place to alter something if you need to change
-some logic.
+[DRY]((https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)) 원칙을 따르세요.  
 
-Imagine if you run a restaurant and you keep track of your inventory: all your
-tomatoes, onions, garlic, spices, etc. If you have multiple lists that you keep
-this on, then all have to be updated when you serve a dish with tomatoes in
-them. If you only have one list, there's only one place to update!
+중복된 코드는 피하세요. 중복된 코드는 만약 변경이 생겼을 때 여러 군데에서 변경을 해줘야 하기 때문에 좋지 않습니다.  
 
-Often you have duplicate code because you have two or more slightly different
-things, that share a lot in common, but their differences force you to have two
-or more separate functions that do much of the same things. Removing duplicate
-code means creating an abstraction that can handle this set of different things
-with just one function/module/class.
+식당을 운영하고 재고를 관리한다고 가정해보겠습니다. 토마토, 양파, 마늘, 향신료 등 모든 재고를 관리해야 합니다.이때 여러 개의 목록을 가지고 있다면 토마토가 들어있는 요리를 제공할 때마다 모든 목록을 업데이트해야 합니다. 반면에 목록이 하나만 있다면 업데이트할 곳은 한 곳 뿐입니다.  
 
-Getting the abstraction right is critical. Bad abstractions can be worse than
-duplicate code, so be careful! Having said this, if you can make a good
-abstraction, do it! Don't repeat yourself, otherwise you'll find yourself
-updating multiple places any time you want to change one thing.
+종종 중복된 코드가 생기는 이유로 코드에서 공통점이 많지만, 약간의 차이로 인해 동일한 작업을 수행하는 두 개 이상의 별도 함수를 가져야 하기 때문입니다. 중복된 코드를 제거하는 것은 단일 함수/모듈/클래스로 이 서로 다른 집합을 처리할 수 있는 추상화를 만드는 것을 의미합니다.  
 
-**Bad:**
+추상화를 올바르게 얻는 것이 중요합니다. 잘못된 추상화는 중복된 코드보다 더 나쁠 수 있으므로 주의하세요! 그럼에도 불구하고, 좋은 추상화를 만들 수 있다면 그것을 하세요! 자신을 반복하지 마세요. 그렇지 않으면 한 가지를 변경할 때마다 여러 곳을 업데이트하게 될 것입니다.
+
+
+**나쁜 예:**
 
 ```python
 from typing import List, Dict
@@ -1521,7 +1510,7 @@ company_managers = [
 company_managers_list = get_manager_list(managers=company_managers)
 ```
 
-**Good:**
+**좋은 예:**
 
 ```python
 from typing import List, Dict
