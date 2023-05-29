@@ -15,7 +15,7 @@
     - [설명 가능한 변수 사용하기](#설명-가능한-변수-사용하기)
     - [암시적인 의미 피하기](#암시적인-의미-피하기)
     - [불필요한 맥락 제거하기](#불필요한-맥락-제거하기)
-    - [Use default arguments instead of short circuiting or conditionals](#use-default-arguments-instead-of-short-circuiting-or-conditionals)
+    - [함수 중단, 조건문 대신 기본 인자 사용하기](#함수-중단-조건문-대신-기본-인자-사용하기)
   - [**Functions**](#functions)
     - [함수는 한 가지 일만 하기](#함수는-한-가지-일만-하기)
     - [함수 인자 (이상적으로는 2개 이하)](#함수-인자-이상적으로는-2개-이하)
@@ -37,10 +37,7 @@
 Robert C. Martin의 저서
 [*Clean Code*](https://product.kyobobook.co.kr/detail/S000001032980)의 소프트웨어 엔지니어링 원칙들을 Python으로 소개합니다. 본 문서는 스타일 가이드가 아닙니다. Python에서 읽기 쉽고 재사용 가능하며 리팩토링 가능한 소프트웨어를 제작하기 위한 가이드입니다.
 
-Not every principle herein has to be strictly followed, and even fewer will be
-universally agreed upon. These are guidelines and nothing more, but they are
-ones codified over many years of collective experience by the authors of *Clean
-Code*.
+여기에 있는 모든 원칙을 엄격하게 준수해야 하는 것은 아니며, 심지어 많은 사람들이 일반적으로 준수해야 한다고 동의할만한 원칙들은 훨씬 적을 것입니다. 원칙들은 어디까지나 가이드라인일 뿐이고, Clean Code의 저자들이 다년간의 경험을 집약해 성문화한 것입니다.
 
 [clean-code-javascript](https://github.com/ryanmcdermott/clean-code-javascript)를 바탕으로 작성되었습니다.
 
@@ -252,7 +249,7 @@ class Car:
 
 **[⬆ back to top](#table-of-contents)**
 
-### Use default arguments instead of short circuiting or conditionals
+### 함수 중단, 조건문 대신 기본 인자 사용하기
 
 **Tricky**
 
@@ -268,8 +265,7 @@ def create_micro_brewery(name):
     # etc.
 ```
 
-... when you can specify a default argument instead? This also makes it clear
-that you are expecting a string as the argument.
+... 위 코드를 기본 인자로 표현하면 어떨까요? 이는 인자에 문자열이 와야한다는 것을 분명히 합니다. 
 
 **좋은 예**:
 
