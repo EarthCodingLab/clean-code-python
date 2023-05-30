@@ -830,28 +830,17 @@ accepts a string.
 
 As an added bonus, the `get_version()` is now reusable elsewhere.
 
-### **Open/Closed Principle (OCP)**
+### **개방/폐쇄 원칙(Open/Closed Principle (OCP))**
 
-> “Incorporate new features  by extending the system, not by making
-> modifications (to it)”,
-> Uncle Bob.
+> “시스템을 확장함으로써 새로운 기능을 통합하세요. (시스템을) 수정하지 말고요.”, Uncle Bob.
 
-Objects should be open for extension, but closed to modification. It should be
-possible to augment the functionality provided by an object (for example, a
-class)
-without changing its internal contracts. An object can enable this when it is
-designed to be extended cleanly.
+객체는 확장에는 개방적이어야 하지만 수정에는 폐쇄적이어야 합니다. 내부 계약의 변경 없이 객체(클래스 등)에서 제공하는 기능을 활용해 확장이 가능해야 합니다. 객체가 깔끔하게 확장될 수 있도록 디자인되어야 이와 같은 방법이 가능해집니다.
 
-In the following example, we try to implement a simple web framework that
-handles HTTP requests and returns responses. The `View` class has a single
-method `.get()` that will be called when the HTTP server will receive a GET
-request from a client.
+다음의 예시는 HTTP 요청을 처리하고 응답을 반환하는 간단한 웹 프레임워크를 구현합니다. `View` 클래스에는 HTTP 서버가 GET 요청을 클라이언트로부터 받았을 때 호출될 단일 메서드 `.get()`가 있습니다.
 
-`View` is intentionally simple and returns `text/plain` responses. We would
-also like to return HTML responses based on a template file, so we subclass it
-using the `TemplateView` class.
+`View`는 의도적으로 단순하고 `text/plain` 응답을 반환합니다. 또한 템플릿 기반의 HTML 응답을 반환하고자 하기에, `TemplateView`라는 하위 클래스를 사용합니다.
 
-**Bad**
+**나쁜 예**
 
 ```python
 from dataclasses import dataclass
@@ -891,6 +880,8 @@ class TemplateView(View):
                )
 
 ```
+
+`TemplateView` 클래스는 더 많은 기능을 수행하기 위해 부모 클래스의 내부 동작을 수정했습니다. 이렇게 함으로써, 이제 일정 시간 정지해야하는 `.get()` 메서드의 구현을 변경하지 않기 위해 `View`에 의존하게 됩니다. 예를 들어, `View`의 파생 클래스들을 
 
 The `TemplateView` class has modified the internal behaviour of its parent
 class in order to enable the more advanced functionality. In doing so, it now
