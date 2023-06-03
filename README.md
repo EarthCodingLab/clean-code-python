@@ -881,19 +881,11 @@ class TemplateView(View):
 
 ```
 
-`TemplateView` 클래스는 더 많은 기능을 수행하기 위해 부모 클래스의 내부 동작을 수정했습니다. 이렇게 함으로써, 이제 일정 시간 정지해야하는 `.get()` 메서드의 구현을 변경하지 않기 위해 `View`에 의존하게 됩니다. 예를 들어, `View`의 파생 클래스들을 
+`TemplateView` 클래스는 더 많은 기능을 수행하기 위해 부모 클래스의 내부 동작을 수정했습니다. 이렇게 함으로써, 이제 일정 시간 정지해야하는 `.get()` 메서드의 구현을 변경하지 않기 위해 `View`에 의존하게 됩니다. 예를 들어, `View`의 파생 클래스들에 대한 몇 가지 추가 검사를 도입하려할 때, 적어도 하나의 하위 유형에 오버라이딩 되어있고 이를 업데이트해야 하기 때문에 불가능합니다.
 
-The `TemplateView` class has modified the internal behaviour of its parent
-class in order to enable the more advanced functionality. In doing so, it now
-relies on the `View` to not change the implementation of the `.get()`
-method, which now needs to be frozen in time. We cannot introduce, for example,
-some additional checks in all our `View`-derived classes because the behaviour
-is overridden in at least one subtype and we will need to update it.
+이 클래스들을 다시 디자인해서 문제를 해결하고 `View` 클래스가 (수정하지 않고) 깔끔하게 확장될 수 있도록 해봅시다.
 
-Let's redesign our classes to fix this problem and let the `View` class be
-extended (not modified) cleanly:
-
-**Good**
+**좋은 예**
 
 ```python
 from dataclasses import dataclass
@@ -939,28 +931,18 @@ class TemplateView(View):
 
 
 ```
+body의 소스를 바꾸려면 `render_body()`에 오버라이딩해야 합니다만, 이 방식은 **'오버라이딩을 위해 서브타입을 불러온다'** 라는 단일이고 잘 정의된 책임을 가집니다. 이는 서브타입에 의해 확장될 수 있게끔 디자인되었습니다.
 
-Note that we did need to override the `render_body()` in order to change the
-source of the body, but this method has a single, well defined responsibility
-that **invites subtypes to override it**. It is designed to be extended by its
-subtypes.
+객체 상속과 객체 구성의 장점을 둘 다 활용하는 또 다른 좋은 방법은 [Mixins](https://docs.djangoproject.com/en/4.1/topics/class-based-views/mixins/)을 사용하는 것입니다.
 
-Another good way to use the strengths of both object inheritance and object
-composition is to
-use [Mixins](https://docs.djangoproject.com/en/4.1/topics/class-based-views/mixins/)
-.
+Mixins는 다른 관련 클래스들과 독점적으로 사용되게끔 하게 해주는 베어본 클래스입니다. 대상의 동작을 변경하기 위해 다중상속을 활용하여 '혼합' 되어있습니다.
 
-Mixins are bare-bones classes that are meant to be used exclusively with other
-related classes. They are "mixed-in" with the target class using multiple
-inheritance, in order to change the target's behaviour.
+몇 가지 규칙들이 있습니다.
 
-A few rules:
+- Mixins는 항상 `객체`로부터 상속받아야 합니다.
+- Mixins는 다음과 같이 항상 대상 클래스 앞에 와야합니다. `class Foo(MixinA, MixinB, TargetClass): ...`
 
-- Mixins should always inherit from `object`
-- Mixins always come before the target class,
-  e.g. `class Foo(MixinA, MixinB, TargetClass): ...`
-
-**Also good**
+**다른 좋은 예**
 
 ```python
 from dataclasses import dataclass, field
@@ -1032,17 +1014,11 @@ class TemplateView(TemplateRenderMixin, ContentLengthMixin, View):
      template_file = "index.html"
 
 ```
+보시다시피, Mixins는 객체를 관련 기능들을 함께 패키징하여 단일 책임을 갖고 있고 깔끔하게 분리될 수 있는 재사용 가능한 클래스로 만듭니다. 클래스 확장은 추가 클래스의 '혼합'으로 달성됩니다.
 
-As you can see, Mixins make object composition easier by packaging together
-related functionality into a highly reusable class with a single
-responsibility, allowing clean decoupling. Class extension is achieved by "
-mixing-in" the additional classes.
+인기있는 Django 프로젝트는 Mixins을 많이 활용하여 클래스 기반의 뷰를 구성합니다.
 
-The popular Django project makes heavy use of Mixins to compose its class-based
-views.
-
-FIXME: re-enable typechecking for the line above once it's clear how to use
-`typing.Protocol` to make the type checker work with Mixins.
+FIXME: Mixins에서 `typing.Protocol`를 사용해 타입 체킹하는 방법이 명확해지면 코드에서도 다시 활성화하도록 합니다.
 
 ### **Liskov Substitution Principle (LSP)**
 
