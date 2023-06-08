@@ -25,7 +25,7 @@
     - [사이드 이펙트 피하기](#사이드-이펙트-피하기)
   - [**Classes**](#classes)
     - [**Single Responsibility Principle (SRP)**](#single-responsibility-principle-srp)
-    - [**Open/Closed Principle (OCP)**](#openclosed-principle-ocp)
+    - [**개방/폐쇄 원칙(Open/Closed Principle (OCP))**](#개방폐쇄-원칙openclosed-principle-ocp)
     - [**Liskov Substitution Principle (LSP)**](#liskov-substitution-principle-lsp)
     - [**Interface Segregation Principle (ISP)**](#interface-segregation-principle-isp)
     - [**Dependency Inversion Principle (DIP)**](#dependency-inversion-principle-dip)
