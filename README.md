@@ -24,7 +24,7 @@
     - [함수 파라미터로 플래그 사용하지 않기](#함수-파라미터로-플래그-사용하지-않기)
     - [사이드 이펙트 피하기](#사이드-이펙트-피하기)
   - [**Classes**](#classes)
-    - [**Single Responsibility Principle (SRP)**](#single-responsibility-principle-srp)
+    - [**단일 책임 원칙(Single Responsibility Principle (SRP))**](#단일-책임-원칙single-responsibility-principle-srp)
     - [**Open/Closed Principle (OCP)**](#openclosed-principle-ocp)
     - [**Liskov Substitution Principle (LSP)**](#liskov-substitution-principle-lsp)
     - [**Interface Segregation Principle (ISP)**](#interface-segregation-principle-isp)
