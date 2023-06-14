@@ -756,7 +756,7 @@ print(person.name_as_first_and_last)  # => ["Ryan", "McDermott"]
 
 ### **단일 책임 원칙(Single Responsibility Principle (SRP))**
 
-Robert C. Martin 는 다음과 같이 저술한 적이 있습니다.
+Robert C. Martin 는 다음과 같이 저술하였습니다.
 
 > 클래스를 변경하는 이유는 오직 하나여야 합니다.
 
