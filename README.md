@@ -764,7 +764,7 @@ Robert C. Martin 는 다음과 같이 저술한 적이 있습니다.
 
 다음의 예시는 문서의 버전을 포함하여 HTML 주석을 나타내는 요소를 만듭니다.
 
-**나쁜 예**
+**나쁜 예:**
 
 ```python
 from importlib import metadata
@@ -788,13 +788,13 @@ VersionCommentElement().render()
 이 클래스는 두 가지 책임을 가집니다.
 
 - 파이썬 패키지의 버전 번호를 검색
-- 그 자체를 HTML 요소로써 렌더링
+- `get_version(self)` 함수의 반환 값을 HTML 요소로써 렌더링
 
 둘 중 어느 하나를 변경하게 되면 다른 하나에 영향을 미칠 위험성이 있습니다.
 
 다음과 같이 클래스를 다시 작성하여 위의 책임들을 분리할 수 있습니다.
 
-**좋은 예**
+**좋은 예:**
 
 ```python
 from importlib import metadata
