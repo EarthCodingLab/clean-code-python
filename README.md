@@ -1053,22 +1053,18 @@ views.
 FIXME: re-enable typechecking for the line above once it's clear how to use
 `typing.Protocol` to make the type checker work with Mixins.
 
-### **Liskov Substitution Principle (LSP)**
+### **리스코프 치환 원칙(Liskov Substitution Principle (LSP))**
 
-> “Functions that use pointers or references to base classes
-> must be able to use objects of derived classes without knowing it”,
+> “베이스 클래스로의 포인터나 참조를 사용하는 함수들은
+> 베이스 클래스의 자식 클래스가 무엇인지 몰라도 반드시 자식 클래스의 객체를 사용할 수 있어야 합니다.”,
 > Uncle Bob.
 
-This principle is named after Barbara Liskov, who collaborated with fellow
-computer scientist Jeannette Wing on the seminal paper
-*"A behavioral notion of subtyping" (1994). A core tenet of the paper is that
-"a subtype (must) preserve the behaviour of the supertype methods and also all
-invariant and history properties of its supertype".
+이 원칙은 Barbara Liskov("A behavioral notion of subtyping" (1994)를 컴퓨터 과학자인 Jeannette Wing와 공동저술 함)의 이름을 딴 원칙입니다. 
+이 논문의 핵심적인 철학은 자식타입은 반드시 부모타입의 메서드와 불변성, {history} 특성을 보존해야 한다는 것입니다.
 
-In essence, a function accepting a supertype should also accept all its
-subtypes with no modification.
+본질적으로, 부모타입을 사용하는 함수는 어떠한 수정없이 부모타입의 모든 것을 받아드려야만 합니다.
 
-Can you spot the problem with the following code?
+다음 코드에서 잘못된 부분을 찾아 보실까요?
 
 **Bad**
 
@@ -1124,16 +1120,15 @@ def render(view: View, request) -> Response:
 
 ```
 
-The expectation is that `render()` function will be able to work with `View`
-and its subtype `TemplateView`, but the latter has broken compatibility by
-modifying the signature of the `.get()` method. The function will raise
-a `TypeError`
-exception when used with `TemplateView`.
+`render()` 함수는 `View`와 자식타입인 `TemplateView`와 함께 작동할 것이라고 생각되지만, 
+`TemplateView`는 `.get()` 메서드를 수정함으로써 `render()`함수와 함께 작동할 수 없습니다. 
+만약 view의 타입으로서 `TemplateView` 를 사용한다면 TypeError exception이 발생할 것입니다.
 
-If we want the `render()` function to work with any subtype of `View`, we must
-pay attention not to break its public-facing protocol. But how do we know what
-constitutes it for a given class? Type hinters like *mypy* will raise an error
-when it detects mistakes like this:
+그리고 만약 우리가 `render()` 함수가 `View`의 자식타입과 작동하기를 원한다면,
+부모타입과 자식타입간의 public-facing protocol이 깨지지 않게 주의해야 합니다.
+(🔍 public-facing protocol이란: 외부에서 접근가능한 부모 클래스의 메서드나 프로퍼티의 불변성)
+그러나, 주어진 클래스가 무엇으로 구성 되었는지는 어떻게 알 수 있을까요?
+mypy 같은 타입 hinter들이 아래와 같이 실수를 감지하고 에러메시지를 띄우게 됩니다.
 
 ```
 error: Signature of "get" incompatible with supertype "View"
