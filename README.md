@@ -1321,14 +1321,13 @@ def view(request):
 
 ```
 
-### **Dependency Inversion Principle (DIP)**
+### **의존성 역전 원칙(Dependency Inversion Principle (DIP))**
 
-> “Depend upon abstractions, not concrete details”,
+> “구체적인 세부사항이 아니라, 추상화에 의존하세요”,
 > Uncle Bob.
 
-Imagine we wanted to write a web view that returns an HTTP response that
-streams rows of a CSV file we create on the fly. We want to use the CSV writer
-that is provided by the standard library.
+우리가 생성한 CSV의 행(row) 파일을 즉시 스트리밍하는 HTTP response를 출력하는 웹 뷰를 만들고 싶었다고 상상해봅시다.
+이를 위해, 우리는 표준 라이브러리에서 제공하는 CSV writer를 사용하려고 합니다.
 
 **Bad**
 
@@ -1369,16 +1368,15 @@ def some_view(request):
 
 ```
 
-Our first implementation works around the CSV's writer interface by
-manipulating a `StringIO` object (which is file-like) and performing several
-low level operations in order to farm out the rows from the writer. It's a lot
-of work and not very elegant.
+우리의 첫 번째 구현은 `StringIO` 객체(file-like와 유사함)를 조작하고
+writer로 부터 행을 파밍하기 위해 낮은 레벨의 작업을 수행함으로써
+CSV writer의 인터페이스를 중심으로 작동합니다.
+이는 많은 작업을 요구하고 세련된 방법이 아닙니다.
 
-A better way is to leverage the fact that the writer just needs an object with
-a `.write()` method to do our bidding. Why not pass it a dummy object that
-immediately returns the newly assembled row, so that
-the `StreamingHttpResponse`
-class can immediate stream it back to the client?
+더 나은 방법은 writer가 우리의 명령을 수행하기 위해 
+`.write()` 메서드가 있는 객체가 필요하다는 사실을 활용하는 것입니다.
+StreamingHttpResponse 클래스가 즉시 클라이언트로 다시 스트리밍할 수 있도록
+새로 조립된 행을 즉시 반환하는 더미 객체를 전달하는 것은 어떨까요?
 
 **Good**
 
@@ -1412,15 +1410,12 @@ def some_streaming_csv_view(request):
 
 ```
 
-Much better, and it works like a charm! The reason it's superior to the
-previous implementation should be obvious: less code (and more performant) to
-achieve the same result. We decided to leverage the fact that the writer class
-depends on the `.write()` abstraction of the object it receives, without caring
-about the low level, concrete details of what the method actually does.
+훨씬 낫고, 그것은 매력적으로 작동합니다! 
+이전 구현보다 우수한 이유는 분명합니다: 동일한 결과를 얻기 위해 코드를 적게 사용(그리고 성능을 더 높임)
+우리는 메서드가 실제로 무엇을 하는지에 대한 낮은 수준의 구체적인 세부 사항에 신경 쓰지 않고, 
+ writer 클래스가 echo 객체의 .write() 추상화에 의존한다는 사실을 활용하기로 결정했습니다.
 
-This example was taken from
-[a submission made to the Django documentation](https://code.djangoproject.com/ticket/21179)
-by this author.
+이 예는 이 저자가 [Django 다큐먼트에 제출한 문서](https://code.djangoproject.com/ticket/21179)에서 가져온 것입니다.
 
 **[⬆ back to top](#table-of-contents)**
 
